@@ -14,14 +14,35 @@ This guide explains how to deploy Trudesk to Render using the Blueprint specific
 3. Connect your repository if you haven't already
 4. Render will automatically detect the `render.yaml` file and create the following services:
    - Web service running the Trudesk application
-   - MongoDB database
+   - MongoDB private service (running in Docker)
    - Redis cache
+
+## Services Configuration
+
+### Main Application
+- Node.js web service running the Trudesk application
+- Uses Node.js 16.20.0 for compatibility with node-sass
+- Binds to port 10000 as required by Render
+- Free tier plan
+
+### MongoDB
+- Runs as a private service using mongo:4.4 Docker image
+- Docker runtime for containerization
+- Includes a 10GB persistent disk for data storage
+- Accessible internally via mongodb://trudesk-mongodb:27017/trudesk
+- Free tier plan
+
+### Redis
+- Managed Redis service
+- Used for caching and session storage
+- Automatically configured and linked
+- Free tier plan
 
 ## Environment Variables
 
 The following environment variables will be automatically configured:
 
-1. `TD_MONGODB_URL`: MongoDB connection URL (automatically linked)
+1. `TD_MONGODB_URL`: Set to connect to the MongoDB private service
 2. `REDIS_URL`: Redis connection URL (automatically linked)
 3. `TRUDESK_JWTSECRET`: Automatically generated secure token
 4. `NODE_ENV`: Set to "production"
@@ -43,9 +64,12 @@ The application is explicitly configured to:
 2. Bind to host '0.0.0.0' for proper Render compatibility
 3. Use the /healthz endpoint for health checks
 
-## Node.js Version
+## Data Persistence
 
-The application uses Node.js 16.20.0 LTS for compatibility with node-sass and other dependencies. This version is set via the NODE_VERSION environment variable.
+MongoDB data is stored on a persistent disk:
+- Size: 10GB
+- Mount path: /data/db
+- Ensures data survives container restarts
 
 ## Post-Deployment Setup
 
@@ -64,17 +88,15 @@ The application uses Node.js 16.20.0 LTS for compatibility with node-sass and ot
 
 ## Troubleshooting
 
-If you encounter any issues:
+1. MongoDB Issues:
+   - Check the MongoDB private service logs
+   - Verify the persistent disk is properly mounted
+   - Ensure the MongoDB connection URL is correct
 
-1. Port Binding Issues:
+2. Port Binding Issues:
    - Verify the application is binding to port 10000
    - Check logs for any port-related errors
    - Ensure both the environment variable and start command specify PORT=10000
-
-2. Database Connection Issues:
-   - Check the MongoDB service is running in your Render dashboard
-   - Verify the MongoDB connection URL is correctly constructed
-   - Look for any authentication errors in the logs
 
 3. Node.js Issues:
    - Verify NODE_VERSION is set to 16.20.0

@@ -17,7 +17,7 @@ services:
       - key: TRUDESK_JWTSECRET
         generateValue: true
       - key: TD_MONGODB_URL
-        value: ${trudesk-mongodb.DATABASE_URL}
+        value: mongodb://trudesk-mongodb:27017/trudesk
       - key: REDIS_URL
         value: ${trudesk-redis.REDIS_URL}
       - key: ELASTICSEARCH_URI
@@ -31,7 +31,17 @@ services:
     plan: free
     maxmemoryPolicy: noeviction
 
-databases:
-  - name: trudesk-mongodb
-    databaseName: trudesk
+  - type: pserv
+    name: trudesk-mongodb
+    runtime: docker
+    region: oregon
     plan: free
+    image:
+      url: mongo:4.4
+    envVars:
+      - key: MONGO_INITDB_DATABASE
+        value: trudesk
+    disk:
+      name: mongodb-data
+      mountPath: /data/db
+      sizeGB: 10
