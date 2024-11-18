@@ -19,11 +19,17 @@ This guide explains how to deploy Trudesk to Render using the Blueprint specific
 
 ## Environment Variables
 
-After deployment, you'll need to configure the following environment variables in your Render dashboard:
+The following environment variables will be automatically configured:
 
-1. `TD_MONGODB_URI`: This will be automatically set to your MongoDB connection string
-2. `REDIS_URL`: This will be automatically set to your Redis connection string
-3. `ELASTICSEARCH_URI`: If you want to use Elasticsearch, set this to your Elasticsearch instance URL
+1. `TD_MONGODB_URL`: MongoDB connection URL (automatically linked)
+2. `REDIS_URL`: Redis connection URL (automatically linked)
+3. `TRUDESK_JWTSECRET`: Automatically generated secure token
+4. `NODE_ENV`: Set to "production"
+5. `PORT`: Set to 8118
+6. `TRUDESK_DOCKER`: Set to "true"
+
+Optional variables you may need to configure manually:
+1. `ELASTICSEARCH_URI`: If you want to use Elasticsearch, set this to your Elasticsearch instance URL
    - Note: You'll need to set up Elasticsearch separately as it's not provided by Render
    - You can use a service like Elastic Cloud or self-host your Elasticsearch instance
 
@@ -47,7 +53,9 @@ After deployment, you'll need to configure the following environment variables i
 If you encounter any issues:
 
 1. Check the application logs in the Render dashboard
-2. Verify all environment variables are set correctly
+2. Verify all environment variables are properly linked:
+   - MongoDB URL should be linked from the trudesk-mongodb service
+   - Redis URL should be linked from the trudesk-redis service
 3. Ensure MongoDB and Redis services are running
 4. Check the Trudesk logs for any specific error messages
 

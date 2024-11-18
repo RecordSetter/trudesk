@@ -3,7 +3,7 @@ services:
     name: trudesk
     runtime: node
     region: ohio
-    plan: standard
+    plan: free
     buildCommand: yarn install && yarn build
     startCommand: yarn start
     healthCheckPath: /
@@ -16,10 +16,10 @@ services:
         value: "true"
       - key: TRUDESK_JWTSECRET
         generateValue: true
-      - key: TD_MONGODB_URI
-        sync: false
+      - key: TD_MONGODB_URL
+        value: ${trudesk-mongodb.DATABASE_URL}
       - key: REDIS_URL
-        sync: false
+        value: ${trudesk-redis.REDIS_URL}
       - key: ELASTICSEARCH_URI
         value: ""
 
