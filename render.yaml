@@ -35,7 +35,7 @@ services:
     name: trudesk-mongodb
     runtime: docker
     region: oregon
-    plan: free
+    plan: starter
     image:
       url: mongo:4.4
     envVars:
