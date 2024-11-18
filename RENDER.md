@@ -21,7 +21,7 @@ This guide explains how to deploy Trudesk to Render using the Blueprint specific
 
 The following environment variables will be automatically configured:
 
-1. `TD_MONGODB_URL`: MongoDB connection URL (automatically linked)
+1. `TD_MONGODB_URL`: MongoDB connection URL (automatically constructed using database service credentials)
 2. `REDIS_URL`: Redis connection URL (automatically linked)
 3. `TRUDESK_JWTSECRET`: Automatically generated secure token
 4. `NODE_ENV`: Set to "production"
@@ -34,9 +34,27 @@ Optional variables you may need to configure manually:
    - Note: You'll need to set up Elasticsearch separately as it's not provided by Render
    - You can use a service like Elastic Cloud or self-host your Elasticsearch instance
 
+## Database Connection
+
+The MongoDB connection URL is constructed using the following format:
+```
+mongodb://${username}:${password}@${host}:${port}/${database}
+```
+
+All these values are automatically populated from the MongoDB service credentials.
+
+## Port Configuration
+
+The application is configured to explicitly bind to the PORT environment variable using:
+```
+PORT=$PORT yarn start
+```
+
+This ensures Render can properly detect and route traffic to your application.
+
 ## Node.js Version
 
-The application uses Node.js 16.20.0 LTS for compatibility with node-sass and other dependencies. This version is set via the NODE_VERSION environment variable in the `render.yaml` configuration.
+The application uses Node.js 16.20.0 LTS for compatibility with node-sass and other dependencies. This version is set via the NODE_VERSION environment variable.
 
 ## Post-Deployment Setup
 
@@ -57,13 +75,25 @@ The application uses Node.js 16.20.0 LTS for compatibility with node-sass and ot
 
 If you encounter any issues:
 
-1. Check the application logs in the Render dashboard
-2. Verify all environment variables are properly linked:
-   - MongoDB URL should be linked from the trudesk-mongodb service
-   - Redis URL should be linked from the trudesk-redis service
-3. Ensure MongoDB and Redis services are running
-4. Check the Trudesk logs for any specific error messages
-5. Verify Node.js version is correctly set to 16.20.0
+1. Database Connection Issues:
+   - Check the MongoDB service is running in your Render dashboard
+   - Verify the MongoDB connection URL is correctly constructed
+   - Look for any authentication errors in the logs
+
+2. Port Binding Issues:
+   - Check the logs for any port-related errors
+   - Verify the PORT environment variable is being properly used
+   - Ensure no other service is using the same port
+
+3. Node.js Issues:
+   - Verify NODE_VERSION is set to 16.20.0
+   - Check for any node-sass compilation errors
+   - Look for any dependency-related errors in the logs
+
+4. General Issues:
+   - Review the application logs in the Render dashboard
+   - Check the service status in your Render dashboard
+   - Verify all environment variables are set correctly
 
 ## Support
 
