@@ -2,7 +2,7 @@ services:
   - type: web
     name: trudesk
     runtime: node
-    region: ohio
+    region: oregon
     plan: free
     buildCommand: yarn install && yarn build
     startCommand: PORT=10000 yarn start
