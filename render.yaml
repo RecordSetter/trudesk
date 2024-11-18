@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: trudesk
+    runtime: node
+    region: ohio
+    plan: standard
+    buildCommand: yarn install && yarn build
+    startCommand: yarn start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8118
+      - key: TRUDESK_DOCKER
+        value: "true"
+      - key: TRUDESK_JWTSECRET
+        generateValue: true
+      - key: TD_MONGODB_URI
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: ELASTICSEARCH_URI
+        value: ""
+
+  - type: redis
+    name: trudesk-redis
+    ipAllowList: []
+    plan: free
+    maxmemoryPolicy: noeviction
+
+databases:
+  - name: trudesk-mongodb
+    databaseName: trudesk
+    plan: free
