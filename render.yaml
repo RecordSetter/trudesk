@@ -22,6 +22,8 @@ services:
         value: ${trudesk-redis.REDIS_URL}
       - key: ELASTICSEARCH_URI
         value: ""
+      - key: NODE_VERSION
+        value: 16.20.0
 
   - type: redis
     name: trudesk-redis

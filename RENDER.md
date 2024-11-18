@@ -27,11 +27,16 @@ The following environment variables will be automatically configured:
 4. `NODE_ENV`: Set to "production"
 5. `PORT`: Set to 8118
 6. `TRUDESK_DOCKER`: Set to "true"
+7. `NODE_VERSION`: Set to 16.20.0 for compatibility with node-sass
 
 Optional variables you may need to configure manually:
 1. `ELASTICSEARCH_URI`: If you want to use Elasticsearch, set this to your Elasticsearch instance URL
    - Note: You'll need to set up Elasticsearch separately as it's not provided by Render
    - You can use a service like Elastic Cloud or self-host your Elasticsearch instance
+
+## Node.js Version
+
+The application uses Node.js 16.20.0 LTS for compatibility with node-sass and other dependencies. This version is set via the NODE_VERSION environment variable in the `render.yaml` configuration.
 
 ## Post-Deployment Setup
 
@@ -58,6 +63,7 @@ If you encounter any issues:
    - Redis URL should be linked from the trudesk-redis service
 3. Ensure MongoDB and Redis services are running
 4. Check the Trudesk logs for any specific error messages
+5. Verify Node.js version is correctly set to 16.20.0
 
 ## Support
 
