@@ -21,11 +21,11 @@ This guide explains how to deploy Trudesk to Render using the Blueprint specific
 
 The following environment variables will be automatically configured:
 
-1. `TD_MONGODB_URL`: MongoDB connection URL (automatically constructed using database service credentials)
+1. `TD_MONGODB_URL`: MongoDB connection URL (automatically linked)
 2. `REDIS_URL`: Redis connection URL (automatically linked)
 3. `TRUDESK_JWTSECRET`: Automatically generated secure token
 4. `NODE_ENV`: Set to "production"
-5. `PORT`: Set to 8118
+5. `PORT`: Set to 10000 (Render's default port)
 6. `TRUDESK_DOCKER`: Set to "true"
 7. `NODE_VERSION`: Set to 16.20.0 for compatibility with node-sass
 
@@ -34,23 +34,14 @@ Optional variables you may need to configure manually:
    - Note: You'll need to set up Elasticsearch separately as it's not provided by Render
    - You can use a service like Elastic Cloud or self-host your Elasticsearch instance
 
-## Database Connection
-
-The MongoDB connection URL is constructed using the following format:
-```
-mongodb://${username}:${password}@${host}:${port}/${database}
-```
-
-All these values are automatically populated from the MongoDB service credentials.
-
 ## Port Configuration
 
-The application is configured to explicitly bind to the PORT environment variable using:
-```
-PORT=$PORT yarn start
-```
-
-This ensures Render can properly detect and route traffic to your application.
+The application is explicitly configured to:
+1. Use port 10000 (Render's default port) in both:
+   - Environment variable: `PORT=10000`
+   - Start command: `PORT=10000 yarn start`
+2. Bind to host '0.0.0.0' for proper Render compatibility
+3. Use the /healthz endpoint for health checks
 
 ## Node.js Version
 
@@ -68,22 +59,22 @@ The application uses Node.js 16.20.0 LTS for compatibility with node-sass and ot
 ## Monitoring
 
 - Monitor your application logs in the Render dashboard
-- Check the health check endpoint at `/` to ensure the service is running
+- Check the health check endpoint at `/healthz` to ensure the service is running
 - Use Render's metrics to monitor resource usage
 
 ## Troubleshooting
 
 If you encounter any issues:
 
-1. Database Connection Issues:
+1. Port Binding Issues:
+   - Verify the application is binding to port 10000
+   - Check logs for any port-related errors
+   - Ensure both the environment variable and start command specify PORT=10000
+
+2. Database Connection Issues:
    - Check the MongoDB service is running in your Render dashboard
    - Verify the MongoDB connection URL is correctly constructed
    - Look for any authentication errors in the logs
-
-2. Port Binding Issues:
-   - Check the logs for any port-related errors
-   - Verify the PORT environment variable is being properly used
-   - Ensure no other service is using the same port
 
 3. Node.js Issues:
    - Verify NODE_VERSION is set to 16.20.0

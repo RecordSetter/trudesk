@@ -5,19 +5,19 @@ services:
     region: ohio
     plan: free
     buildCommand: yarn install && yarn build
-    startCommand: PORT=$PORT yarn start
-    healthCheckPath: /
+    startCommand: PORT=10000 yarn start
+    healthCheckPath: /healthz
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: 8118
+        value: 10000
       - key: TRUDESK_DOCKER
         value: "true"
       - key: TRUDESK_JWTSECRET
         generateValue: true
       - key: TD_MONGODB_URL
-        value: mongodb://${trudesk-mongodb.username}:${trudesk-mongodb.password}@${trudesk-mongodb.host}:${trudesk-mongodb.port}/${trudesk-mongodb.database}
+        value: ${trudesk-mongodb.DATABASE_URL}
       - key: REDIS_URL
         value: ${trudesk-redis.REDIS_URL}
       - key: ELASTICSEARCH_URI
